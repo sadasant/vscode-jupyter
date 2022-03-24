@@ -293,15 +293,15 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
                 async () => (cell1.executionSummary?.executionOrder || 0) === 4,
                 30_000,
                 'Execution order of cell 1 should be 4'
-                ),
+            ),
             waitForCondition(
                 async () => (cell2.executionSummary?.executionOrder || 0) === 5,
                 30_000,
                 'Execution order of cell 2 should be 4'
-                ),
-                waitForQueuedForExecution(cell3)
-            ]);
-            console.log('Step9');
+            ),
+            waitForQueuedForExecution(cell3)
+        ]);
+        console.log('Step9');
 
         // Interrupt the kernel & wait for 2 to cancel & 3 to get de-queued.
         commandManager.executeCommand(Commands.NotebookEditorInterruptKernel, vscEditor.document.uri).then(noop, noop);
