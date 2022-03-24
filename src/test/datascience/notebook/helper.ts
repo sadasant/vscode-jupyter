@@ -725,10 +725,15 @@ function hasTextOutputValue(output: NotebookCellOutputItem, value: string, isExa
         return false;
     }
 }
+/**
+ * @param {number} [index=0] If `-1` then look at all of the output.
+ */
 export function assertHasTextOutputInVSCode(cell: NotebookCell, text: string, index: number = 0, isExactMatch = true) {
     const cellOutputs = cell.outputs;
     assert.ok(cellOutputs.length, 'No output');
-    const result = cell.outputs[index].items.some((item) => hasTextOutputValue(item, text, isExactMatch));
+    const result = (index === -1 ? cell.outputs : [cell.outputs[index]]).some((output) =>
+        output.items.some((item) => hasTextOutputValue(item, text, isExactMatch))
+    );
     assert.isTrue(
         result,
         `${text} not found in outputs of cell ${cell.index} ${cell.outputs[index].items
@@ -737,6 +742,9 @@ export function assertHasTextOutputInVSCode(cell: NotebookCell, text: string, in
     );
     return result;
 }
+/**
+ * @param {number} [index=0] If `-1` then look at all of the output.
+ */
 export async function waitForTextOutput(
     cell: NotebookCell,
     text: string,

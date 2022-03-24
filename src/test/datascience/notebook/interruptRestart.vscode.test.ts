@@ -86,7 +86,7 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         await closeNotebooksAndCleanUpAfterTests(disposables.concat(suiteDisposables));
     });
 
-    test('Interrupting kernel (Cancelling token) will cancel cell execution', async () => {
+    test('Interrupting kernel with Cancelling token will cancel cell execution', async () => {
         await insertCodeCell('import time\nfor i in range(10000):\n  print(i)\n  time.sleep(0.1)', { index: 0 });
         const cell = vscEditor.document.cellAt(0);
         const appShell = api.serviceContainer.get<IApplicationShell>(IApplicationShell);
@@ -97,7 +97,7 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         runCell(cell).catch(noop);
         traceInfo('Step 2');
 
-        await waitForTextOutput(cell, '1', 0, false);
+        await waitForTextOutput(cell, '1', -1, false);
         traceInfo('Step 3');
 
         // Interrupt the kernel.
@@ -229,7 +229,7 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         await Promise.all([
             runAllCellsInActiveNotebook(),
             waitForExecutionCompletedSuccessfully(cell1),
-            waitForTextOutput(cell2, '1', 0, false),
+            waitForTextOutput(cell2, '1', -1, false),
             waitForQueuedForExecution(cell3)
         ]);
         console.log('Step2');
@@ -257,7 +257,7 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
                 30_000,
                 'Execution order of cell 1 should be greater than previous execution count'
             ),
-            waitForTextOutput(cell2, '1', 0, false),
+            waitForTextOutput(cell2, '1', -1, false),
             waitForCondition(
                 async () => getTextOutputValue(cell2.outputs[0]).trim() != cell2Output,
                 30_000,
@@ -318,7 +318,7 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         await Promise.all([
             runCell(cell3),
             waitForExecutionCompletedSuccessfully(cell3),
-            waitForTextOutput(cell3, '3', 0, false)
+            waitForTextOutput(cell3, '3', -1, false)
         ]);
         console.log('Step12');
     });
