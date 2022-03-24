@@ -93,15 +93,20 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         const showInformationMessage = sinon.stub(appShell, 'showInformationMessage');
         showInformationMessage.resolves(); // Ignore message to restart kernel.
         disposables.push({ dispose: () => showInformationMessage.restore() });
+        traceInfo('Step 1');
         runCell(cell).catch(noop);
+        traceInfo('Step 2');
 
         await waitForTextOutput(cell, '1', 0, false);
+        traceInfo('Step 3');
 
         // Interrupt the kernel.
         commandManager.executeCommand(Commands.NotebookEditorInterruptKernel, vscEditor.document.uri).then(noop, noop);
+        traceInfo('Step 4');
 
         // Wait for interruption (cell will fail with errors).
         await waitForCondition(async () => hasErrorOutput(cell.outputs), 30_000, 'No errors');
+        traceInfo('Step 5');
     });
     test('Restarting kernel will cancel cell execution & we can re-run a cell', async function () {
         if (IS_REMOTE_NATIVE_TEST) {
