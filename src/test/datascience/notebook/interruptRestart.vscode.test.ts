@@ -105,9 +105,9 @@ suite('DataScience - VSCode Notebook - Restart/Interrupt/Cancel/Errors (slow)', 
         traceInfo('Step 4');
 
         // Wait for interruption (cell will fail with errors).
-        await waitForCondition(async () => hasErrorOutput(cell.outputs), 30_000, 'No errors');
+        await waitForCondition(async () => hasErrorOutput(cell.outputs), 30_000, () => 'No errors');
         traceInfo('Step 5');
-    });
+    }).timeout(120_000);
     test('Restarting kernel will cancel cell execution & we can re-run a cell', async function () {
         if (IS_REMOTE_NATIVE_TEST) {
             return this.skip();
