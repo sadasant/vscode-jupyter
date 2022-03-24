@@ -758,7 +758,9 @@ export async function waitForTextOutput(
         () =>
             `A after ${timeout}ms output does not contain provided text '${text}' for Cell ${
                 cell.index + 1
-            }, it is ${getCellOutputs(cell)}`
+            } in output index ${index}, it is ${cell.outputs
+                .map((output, index) => `Output Index = ${index}, ${output.items.map(getOutputText).join('\n')}`)
+                .join('\n')}`
     );
 }
 export function assertNotHasTextOutputInVSCode(cell: NotebookCell, text: string, index: number, isExactMatch = true) {
